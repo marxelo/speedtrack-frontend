@@ -1,0 +1,120 @@
+<div class="page-content">
+  <div class="page-header">
+    <h1 class="page-title">Registrar Encomenda</h1>
+    <button class="btn btn-secondary" (click)="cancel()">
+      <i class="material-symbols-outlined">arrow_back</i> Voltar
+    </button>
+  </div>
+
+  <form [formGroup]="packageForm" (ngSubmit)="onSubmit()" class="form-container">
+    
+    <div class="form-section">
+      <h3 class="form-section-title">
+        <i class="material-symbols-outlined">receipt</i> Dados da Encomenda
+      </h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Código de Rastreamento do Parceiro</label>
+          <input type="text" formControlName="partnerCode" class="form-control" placeholder="Ex: MKT-123456" 
+                 [class.error]="packageForm.get('partnerCode')?.invalid && packageForm.get('partnerCode')?.touched">
+        </div>
+
+        <div class="form-group">
+          <label>Parceiro Comercial</label>
+          <select formControlName="partnerName" class="form-control"
+                  [class.error]="packageForm.get('partnerName')?.invalid && packageForm.get('partnerName')?.touched">
+            <option value="">Selecione...</option>
+            <option value="Mercado Livre">Mercado Livre</option>
+            <option value="Amazon">Amazon</option>
+            <option value="Shopee">Shopee</option>
+            <option value="Magazine Luiza">Magazine Luiza</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3 class="form-section-title">
+        <i class="material-symbols-outlined">person</i> Dados do Destinatário
+      </h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nome Completo</label>
+          <input type="text" formControlName="recipientName" class="form-control" placeholder="Nome do destinatário">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Endereço</label>
+          <input type="text" formControlName="recipientAddress" class="form-control" placeholder="Rua, número, complemento">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>UF</label>
+          <select formControlName="recipientState" class="form-control" (change)="onStateChange($event)">
+            <option value="">Selecione...</option>
+            <option *ngFor="let state of states" [value]="state.sigla">{{ state.sigla }} - {{ state.nome }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Cidade</label>
+          <select formControlName="recipientCity" class="form-control">
+            <option value="">{{ isLoadingCities ? 'Carregando...' : 'Selecione a UF primeiro' }}</option>
+            <option *ngFor="let city of cities" [value]="city.nome">{{ city.nome }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Telefone</label>
+          <input type="tel" formControlName="recipientPhone" class="form-control" placeholder="(00) 00000-0000">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3 class="form-section-title">
+        <i class="material-symbols-outlined">inventory</i> Itens da Entrega
+      </h3>
+
+      <div formArrayName="items">
+        <div *ngFor="let item of itemsFormArray.controls; let i = index" [formGroupName]="i" class="form-row item-row">
+          
+          <div class="form-group" style="flex: 3;">
+            <label>Descrição do Item</label>
+            <input type="text" formControlName="description" class="form-control" placeholder="Ex: Smartphone Galaxy">
+          </div>
+
+          <div class="form-group" style="flex: 1;">
+            <label>Quantidade</label>
+            <input type="number" formControlName="quantity" class="form-control" min="1">
+          </div>
+
+          <div class="form-group" style="align-self: flex-end; margin-bottom: 5px;">
+            <button type="button" class="btn btn-text btn-destructive" (click)="removeItem(i)" *ngIf="itemsFormArray.length > 1">
+              <i class="material-symbols-outlined">delete</i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-secondary" (click)="addItem()" style="margin-top: 10px;">
+        <i class="material-symbols-outlined">add</i> Adicionar Item
+      </button>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="cancel()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="packageForm.invalid">
+        <i class="material-symbols-outlined">save</i> Registrar Encomenda
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,1 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+/* src/styles.css */
+:root {
+    --primary: #005A9C;
+    --secondary: #E6F0F9;
+    --dark-gray: #1A1A1A;
+    --medium-gray: #6B7280;
+    --light-gray: #D1D5DB;
+    --bg-gray: #F9FAFB;
+    --white: #FFFFFF;
+    --success: #10B981;
+    --error: #EF4444;
+    --warning: #F59E0B;
+    --info: #3B82F6;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-gray);
+    color: var(--dark-gray);
+}
