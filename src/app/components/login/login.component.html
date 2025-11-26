@@ -1,1 +1,49 @@
-<p>login works!</p>
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-logo">
+      <i class="material-symbols-outlined">delivery_truck_speed</i>SpeedLog
+    </div>
+    
+    <h1 class="login-title">Bem-vindo de volta</h1>
+    <p class="login-subtitle">Faça login para acessar o portal SpeedTrack</p>
+
+    <div *ngIf="errorMessage" class="alert-error">
+      <i class="material-symbols-outlined">error</i> {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input 
+          id="email" 
+          type="email" 
+          formControlName="email" 
+          class="form-control" 
+          placeholder="seu@email.com"
+          [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input 
+          id="password" 
+          type="password" 
+          formControlName="password" 
+          class="form-control" 
+          placeholder="••••••••"
+        >
+        <div style="text-align: right; margin-top: 5px;">
+          <button type="button" class="btn-text">Esqueci minha senha</button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary full-width" [disabled]="loginForm.invalid || isLoading">
+        <span *ngIf="!isLoading"><i class="material-symbols-outlined">login</i> Entrar</span>
+        <span *ngIf="isLoading">Entrando...</span>
+      </button>
+
+    </form>
+  </div>
+</div>
