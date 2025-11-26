@@ -2,10 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Package, CreatePackageDTO, PackageStatus, DashboardStats, User } from '../models/speedtrack.models';
+import {
+  Package,
+  CreatePackageDTO,
+  PackageStatus,
+  DashboardStats,
+  User,
+} from '../models/speedtrack.models';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PackageService {
   private apiUrl = `${environment.apiUrl}/packages`;
@@ -19,12 +25,19 @@ export class PackageService {
   }
 
   // --- Packages ---
-  getPackages(filters?: any): Observable<Package[]> {
+  getPackages(filters?: {
+    status?: string;
+    partner?: string;
+    courierId?: number;
+  }): Observable<Package[]> {
     let params = new HttpParams();
+
     if (filters) {
-      // Logic to append filters to params if backend supports searching
-      // e.g., if (filters.status) params = params.set('status', filters.status);
+      if (filters.status) params = params.set('status', filters.status);
+      if (filters.partner) params = params.set('partner', filters.partner);
+      if (filters.courierId) params = params.set('courierId', filters.courierId);
     }
+
     return this.http.get<Package[]>(this.apiUrl, { params });
   }
 
@@ -37,9 +50,14 @@ export class PackageService {
   }
 
   // --- Actions ---
-  updateStatus(id: number, newStatus: PackageStatus, notes?: string, courierName?: string): Observable<Package> {
+  updateStatus(
+    id: number,
+    newStatus: PackageStatus,
+    notes?: string,
+    courierName?: string
+  ): Observable<Package> {
     let params = new HttpParams().set('newStatus', newStatus);
-    
+
     if (notes) params = params.set('notes', notes);
     if (courierName) params = params.set('courierName', courierName);
 
@@ -47,7 +65,6 @@ export class PackageService {
   }
 
   // Helper to get available couriers for the dropdown
-  // Note: You need to implement this endpoint in UserController in Java
   getCouriers(): Observable<User[]> {
     return this.http.get<User[]>(`${environment.apiUrl}/users/couriers`);
   }

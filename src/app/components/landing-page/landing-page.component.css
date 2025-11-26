@@ -1,0 +1,87 @@
+.landing-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-gray);
+}
+.landing-header {
+  background-color: var(--white);
+  padding: 15px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.landing-logo {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 8px;
+  color: var(--primary);
+  font-size: 24px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.landing-logo .material-symbols-outlined {
+  font-size: 28px;
+}
+.landing-hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 50px 20px;
+  background: linear-gradient(rgba(0, 90, 156, 0.1), rgba(0, 90, 156, 0.05));
+}
+.hero-title {
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 20px;
+  max-width: 800px;
+}
+.hero-subtitle {
+  font-size: 20px;
+  color: var(--medium-gray);
+  margin-bottom: 40px;
+  max-width: 600px;
+  line-height: 1.6;
+}
+.tracking-form {
+  display: flex;
+  max-width: 500px;
+  width: 100%;
+  margin-bottom: 30px;
+}
+.tracking-input {
+  flex: 1;
+  padding: 15px 20px;
+  border: 1px solid var(--light-gray);
+  border-radius: 6px 0 0 6px;
+  font-size: 16px;
+}
+.tracking-button {
+  padding: 15px 25px;
+  background-color: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: 0 6px 6px 0;
+  font-weight: 500;
+  cursor: pointer;
+}
+.landing-footer {
+  background-color: var(--dark-gray);
+  color: var(--white);
+  padding: 30px 20px;
+  text-align: center;
+}
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}

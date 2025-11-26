@@ -1,35 +1,44 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { UserRole } from '../../../models/speedtrack.models';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule], // RouterModule is crucial here
+  imports: [CommonModule, RouterModule],
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.css']
 })
-export class MainLayoutComponent {
+export class MainLayoutComponent implements OnInit {
   isSidebarOpen = false;
   isUserMenuOpen = false;
-  userRole: string = '';
+  
+  // Role Flags
+  isAdmin = false;
+  isOperator = false;
+  isCourier = false;
+  
+  currentUser: any = null;
 
-  constructor(private authService: AuthService, private router: Router) {
-    // Basic role check (mocked for now if auth service isn't fully ready)
-    this.userRole = this.authService.getUserRole() || 'ADMIN';
+  constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit() {
+    // Determine roles based on Auth Service
+    const role = this.authService.getUserRole();
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+    this.isAdmin = role === UserRole.ADMIN;
+    this.isOperator = role === UserRole.OPERATOR;
+    this.isCourier = role === UserRole.COURIER;
   }
 
-  toggleSidebar() {
-    this.isSidebarOpen = !this.isSidebarOpen;
-  }
-
-  toggleUserMenu() {
-    this.isUserMenuOpen = !this.isUserMenuOpen;
-  }
+  toggleSidebar() { this.isSidebarOpen = !this.isSidebarOpen; }
+  toggleUserMenu() { this.isUserMenuOpen = !this.isUserMenuOpen; }
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']); // Redirect to Landing Page
   }
 }

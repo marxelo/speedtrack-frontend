@@ -7,33 +7,52 @@
     </div>
 
     <ul class="nav-menu">
-      <li class="nav-item">
-        <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+      <!-- DASHBOARD: Admin & Operator -->
+      <li class="nav-item" *ngIf="isAdmin || isOperator || isCourier">
+        <a routerLink="/app/dashboard" routerLinkActive="active" class="nav-link">
           <i class="material-symbols-outlined">dashboard</i> Dashboard
         </a>
       </li>
-      <li class="nav-item">
-        <a routerLink="/register" routerLinkActive="active" class="nav-link">
+
+      <!-- REGISTER: Admin & Operator -->
+      <li class="nav-item" *ngIf="isAdmin || isOperator">
+        <a routerLink="/app/register" routerLinkActive="active" class="nav-link">
           <i class="material-symbols-outlined">add_box</i> Registrar Encomenda
         </a>
       </li>
-      </ul>
+
+      <!-- CONSULT: Operator & Courier -->
+      <li class="nav-item" *ngIf="isOperator || isCourier">
+        <a routerLink="/app/consult" routerLinkActive="active" class="nav-link">
+          <i class="material-symbols-outlined">search</i> Consultar Encomendas
+        </a>
+      </li>
+
+      <!-- MANAGE USERS: Admin Only -->
+      <li class="nav-item" *ngIf="isAdmin">
+        <a routerLink="/app/users" routerLinkActive="active" class="nav-link">
+          <i class="material-symbols-outlined">manage_accounts</i> Gerenciar Usuários
+        </a>
+      </li>
+    </ul>
   </div>
 
   <div class="main-content">
-    
     <div class="header">
       <button class="mobile-menu-btn" (click)="toggleSidebar()">
         <i class="material-symbols-outlined">menu</i>
       </button>
 
       <div class="user-menu">
-        <div class="user-info" (click)="toggleUserMenu()">
+<div class="user-info" (click)="toggleUserMenu()">
           <div>
-            <span class="user-name">Admin User</span>
-            <span class="user-role">{{ userRole }}</span>
+            <span class="user-name">{{ currentUser?.name }}</span>
+            <span class="user-role">{{ currentUser?.role }}</span>
           </div>
-          <div class="user-avatar">AD</div>
+          <div class="user-avatar">
+             <!-- Simple Avatar Logic -->
+             {{ currentUser?.name?.charAt(0) }}
+          </div>
         </div>
 
         <div class="dropdown-menu" [class.show]="isUserMenuOpen">
@@ -45,6 +64,5 @@
     </div>
 
     <router-outlet></router-outlet>
-    
   </div>
 </div>

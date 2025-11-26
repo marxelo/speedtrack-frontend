@@ -1,0 +1,58 @@
+/* Página "Em Construção" */
+.construction-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: 20px;
+}
+
+.construction-content {
+  max-width: 500px;
+}
+
+.construction-icon {
+  font-size: 60px;
+  color: var(--warning);
+  margin-bottom: 20px;
+}
+
+.construction-title {
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+.construction-text {
+  color: var(--medium-gray);
+  margin-bottom: 25px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+/* Botões */
+.btn {
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn i {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background-color: #004a83;
+}

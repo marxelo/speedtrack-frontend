@@ -39,7 +39,7 @@ export class LoginComponent {
       next: (response) => {
         // Login successful - redirect to dashboard
         this.isLoading = false;
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/app/dashboard']);
       },
       error: (err) => {
         this.isLoading = false;

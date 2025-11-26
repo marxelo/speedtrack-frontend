@@ -1,0 +1,92 @@
+<div class="page-content">
+  <div class="page-header">
+    <h1 class="page-title">Consultar Encomendas</h1>
+  </div>
+
+  <form [formGroup]="filterForm" (ngSubmit)="loadPackages()" class="form-container">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Situação da Encomenda</label>
+        <select formControlName="status" class="form-control">
+          <option value="">Todas</option>
+          <option *ngFor="let status of statusOptions" [value]="status">
+            {{ formatStatus(status) }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Parceiro Comercial</label>
+        <select formControlName="partner" class="form-control">
+          <option value="">Todos</option>
+          <option value="Mercado Livre">Mercado Livre</option>
+          <option value="Amazon">Amazon</option>
+          <option value="Shopee">Shopee</option>
+          <option value="Magazine Luiza">Magazine Luiza</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Entregador</label>
+        <select formControlName="courierId" class="form-control">
+          <option value="">Todos</option>
+          <option *ngFor="let courier of couriers" [value]="courier.id">
+            {{ courier.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="clearFilters()">
+        <i class="material-symbols-outlined">clear</i> Limpar
+      </button>
+      <button type="submit" class="btn btn-primary">
+        <i class="material-symbols-outlined">search</i> Aplicar Filtros
+      </button>
+    </div>
+  </form>
+
+  <div class="table-container" style="margin-top: 25px;">
+    <div class="table-header">
+      <h3 class="table-title">Resultados ({{ packages.length }})</h3>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Cód. SpeedTrack</th>
+          <th>Cód. Parceiro</th>
+          <th>Destinatário</th>
+          <th>Situação Atual</th>
+          <th>Entregador</th>
+          <th>Última Atualização</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pack of packages" style="cursor: pointer;" [routerLink]="['/app/package', pack.id]">
+          <td><strong>{{ pack.trackingCode }}</strong></td>
+          <td>{{ pack.partnerCode }}</td>
+          <td>{{ pack.recipientName }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="getStatusClass(pack.currentStatus)">
+              {{ formatStatus(pack.currentStatus) }}
+            </span>
+          </td>
+          <td>{{ pack.currentCourier?.name || '-' }}</td>
+          <td>
+            {{ (pack.history.length > 0 ? pack.history[pack.history.length-1].actionDate : pack.createdAt) | date:'dd/MM/yyyy HH:mm' }}
+          </td>
+        </tr>
+        
+        <tr *ngIf="packages.length === 0">
+          <td colspan="6" style="text-align: center; padding: 30px; color: var(--medium-gray);">
+            Nenhuma encomenda encontrada com estes filtros.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
