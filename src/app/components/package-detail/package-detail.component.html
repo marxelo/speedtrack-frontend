@@ -1,1 +1,127 @@
-<p>package-detail works!</p>
+<div class="page-content" *ngIf="package; else loading">
+  
+  <div class="page-header">
+    <h1 class="page-title">Detalhes da Encomenda</h1>
+    <button class="btn btn-secondary" (click)="goBack()">
+      <i class="material-symbols-outlined">arrow_back</i> Voltar
+    </button>
+  </div>
+
+  <div class="encomenda-details">
+    <div class="encomenda-info">
+      
+      <div class="encomenda-header">
+        <h2 class="encomenda-title">{{ package.trackingCode }}</h2>
+        <div class="status-badge" [ngClass]="getStatusClass(package.currentStatus)">
+          {{ formatStatus(package.currentStatus) }}
+        </div>
+      </div>
+
+      <div class="encomenda-actions">
+        
+        <button *ngIf="package.currentStatus === PackageStatus.WAITING_ASSIGNMENT" 
+                class="btn btn-primary" 
+                (click)="changeStatus(PackageStatus.WAITING_WITHDRAWAL)">
+          <i class="material-symbols-outlined">local_shipping</i> Atribuir Entregador
+        </button>
+
+        <button *ngIf="package.currentStatus === PackageStatus.WAITING_WITHDRAWAL" 
+                class="btn btn-primary" 
+                (click)="changeStatus(PackageStatus.WITH_COURIER)">
+          <i class="material-symbols-outlined">check_circle</i> Confirmar Retirada
+        </button>
+
+        <button *ngIf="package.currentStatus === PackageStatus.WITH_COURIER" 
+                class="btn btn-primary" 
+                (click)="changeStatus(PackageStatus.OUT_FOR_DELIVERY)">
+          <i class="material-symbols-outlined">directions_bike</i> Saída para Entrega
+        </button>
+
+        <button *ngIf="package.currentStatus === PackageStatus.OUT_FOR_DELIVERY" 
+                class="btn btn-primary" 
+                (click)="changeStatus(PackageStatus.DELIVERED)">
+          <i class="material-symbols-outlined">done_all</i> Registrar Entrega
+        </button>
+
+         <button *ngIf="package.currentStatus === PackageStatus.OUT_FOR_DELIVERY || package.currentStatus === PackageStatus.WITH_COURIER" 
+                class="btn btn-destructive" 
+                (click)="changeStatus(PackageStatus.RETURNED_WAREHOUSE)">
+          <i class="material-symbols-outlined">keyboard_return</i> Devolver
+        </button>
+
+      </div>
+
+      <div class="info-card">
+        <h3 class="info-card-title">
+          <i class="material-symbols-outlined">business</i> Parceiro Comercial
+        </h3>
+        <div class="info-row">
+          <div class="info-label">Nome:</div>
+          <div class="info-value">{{ package.partnerName }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Código:</div>
+          <div class="info-value">{{ package.partnerCode }}</div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h3 class="info-card-title">
+          <i class="material-symbols-outlined">person</i> Destinatário
+        </h3>
+        <div class="info-row">
+          <div class="info-label">Nome:</div>
+          <div class="info-value">{{ package.recipientName }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Endereço:</div>
+          <div class="info-value">{{ package.recipientAddress }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Cidade/UF:</div>
+          <div class="info-value">{{ package.recipientCity }} / {{ package.recipientState }}</div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h3 class="info-card-title">
+          <i class="material-symbols-outlined">inventory</i> Itens
+        </h3>
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th>Descrição</th>
+              <th>Qtd.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of package.items">
+              <td>{{ item.description }}</td>
+              <td>{{ item.quantity }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="history-timeline">
+      <h3 class="timeline-title">Histórico</h3>
+      
+      <div class="timeline-item" *ngFor="let event of package.history">
+        <div class="timeline-date">{{ event.actionDate | date:'dd/MM/yyyy HH:mm' }}</div>
+        <div class="timeline-content">
+          <strong>{{ event.actionType }}</strong>
+          <p *ngIf="event.notes" style="font-size: 13px; margin-top: 2px;">{{ event.notes }}</p>
+          <div *ngIf="event.statusSnapshot" class="timeline-status" [ngClass]="getStatusClass(event.statusSnapshot)">
+            {{ formatStatus(event.statusSnapshot) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<ng-template #loading>
+  <div class="page-content">Carregando detalhes...</div>
+</ng-template>

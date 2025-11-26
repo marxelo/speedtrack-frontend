@@ -1,1 +1,105 @@
-<p>dashboard works!</p>
+<div class="page-content">  
+  <div class="page-header">
+    <h1 class="page-title">Dashboard</h1> 
+    <div id="dashboard-actions"> 
+      <button class="btn btn-primary" routerLink="/register">
+        <i class="material-symbols-outlined">add</i> Registrar Encomenda
+      </button>
+    </div>
+  </div>
+
+  <div class="cards-container" *ngIf="stats$ | async as stats">
+    <div class="card">
+      <div class="card-title">
+        <i class="material-symbols-outlined">schedule</i> Aguardando Atribuição
+      </div>
+      <div class="card-value">{{ stats.waiting }}</div>
+      <div class="card-footer">
+        <i class="material-symbols-outlined">trending_flat</i> Atualizado agora
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <i class="material-symbols-outlined">local_shipping</i> Em Trânsito
+      </div>
+      <div class="card-value">{{ stats.transit }}</div>
+      <div class="card-footer positive">
+        <i class="material-symbols-outlined">info</i> Saiu p/ Entrega + Com Entregador
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <i class="material-symbols-outlined">done_all</i> Entregues
+      </div>
+      <div class="card-value">{{ stats.delivered }}</div>
+      <div class="card-footer positive">
+        <i class="material-symbols-outlined">check</i> Total acumulado
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <i class="material-symbols-outlined">warning</i> Ocorrências
+      </div>
+      <div class="card-value">{{ stats.issues }}</div>
+      <div class="card-footer negative">
+        <i class="material-symbols-outlined">priority_high</i> Requer atenção
+      </div>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <div class="table-header">
+      <h3 class="table-title">Últimas Atualizações</h3>
+      <div class="table-actions">
+        <button class="btn btn-secondary">
+          <i class="material-symbols-outlined">list</i> Ver Todas
+        </button>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Destinatário</th>
+          <th>Status</th>
+          <th>Entregador</th>
+          <th>Atualizado em</th>
+        </tr>
+      </thead>
+<tbody *ngIf="recentPackages$ | async as packages; else loading">
+  
+  <tr *ngFor="let pack of packages" style="cursor: pointer" [routerLink]="['/package', pack.id]">
+    <td><strong>{{ pack.trackingCode }}</strong></td>
+    <td>{{ pack.recipientName }}</td>
+    <td>
+      <span class="status-badge" [ngClass]="getStatusClass(pack.currentStatus)">
+        {{ formatStatus(pack.currentStatus) }}
+      </span>
+    </td>
+    <td>{{ pack.currentCourier?.name || '-' }}</td>
+    <td>
+       {{ (pack.history.length > 0 ? pack.history[pack.history.length-1].actionDate : pack.createdAt) | date:'dd/MM/yyyy HH:mm' }}
+    </td>
+  </tr>
+
+  <tr *ngIf="packages.length === 0">
+    <td colspan="5" style="text-align: center; padding: 20px; color: var(--medium-gray);">
+      Nenhuma encomenda registrada ainda.
+    </td>
+  </tr>
+</tbody>
+
+<ng-template #loading>
+  <tbody>
+    <tr>
+      <td colspan="5" style="text-align: center; padding: 20px;">Carregando...</td>
+    </tr>
+  </tbody>
+</ng-template>
+    </table>
+  </div>
+</div>
