@@ -50,16 +50,12 @@ export class PackageService {
   }
 
   // --- Actions ---
-  updateStatus(
-    id: number,
-    newStatus: PackageStatus,
-    notes?: string,
-    courierName?: string
-  ): Observable<Package> {
+  // Update the signature to accept number | undefined
+  updateStatus(id: number, newStatus: PackageStatus, notes?: string, courierId?: number): Observable<Package> {
     let params = new HttpParams().set('newStatus', newStatus);
 
     if (notes) params = params.set('notes', notes);
-    if (courierName) params = params.set('courierName', courierName);
+    if (courierId) params = params.set('courierId', courierId); // Send ID now
 
     return this.http.patch<Package>(`${this.apiUrl}/${id}/status`, {}, { params });
   }

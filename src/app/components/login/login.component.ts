@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { UserRole } from '../../models/speedtrack.models';
 
 @Component({
   selector: 'app-login',
@@ -37,9 +38,14 @@ export class LoginComponent {
 
     this.authService.login(email, password).subscribe({
       next: (response) => {
-        // Login successful - redirect to dashboard
-        this.isLoading = false;
-        this.router.navigate(['/app/dashboard']);
+// 2. Dynamic Redirect Logic
+        if (response.role === UserRole.COURIER) {
+          // Couriers go directly to Consult page
+          this.router.navigate(['/app/consult']);
+        } else {
+          // Admins and Operators go to Dashboard
+          this.router.navigate(['/app/dashboard']);
+        }
       },
       error: (err) => {
         this.isLoading = false;

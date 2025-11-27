@@ -8,7 +8,7 @@
 
     <ul class="nav-menu">
       <!-- DASHBOARD: Admin & Operator -->
-      <li class="nav-item" *ngIf="isAdmin || isOperator || isCourier">
+      <li class="nav-item" *ngIf="isAdmin || isOperator">
         <a routerLink="/app/dashboard" routerLinkActive="active" class="nav-link">
           <i class="material-symbols-outlined">dashboard</i> Dashboard
         </a>
@@ -44,14 +44,14 @@
       </button>
 
       <div class="user-menu">
-<div class="user-info" (click)="toggleUserMenu()">
+        <div class="user-info" (click)="toggleUserMenu()">
           <div>
             <span class="user-name">{{ currentUser?.name }}</span>
-            <span class="user-role">{{ currentUser?.role }}</span>
+            <span class="user-role">{{ getRoleLabel(currentUser?.role) }}</span>
           </div>
           <div class="user-avatar">
-             <!-- Simple Avatar Logic -->
-             {{ currentUser?.name?.charAt(0) }}
+            <!-- Simple Avatar Logic -->
+            {{ currentUser?.name?.charAt(0) }}
           </div>
         </div>
 

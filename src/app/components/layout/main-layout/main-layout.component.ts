@@ -9,18 +9,31 @@ import { UserRole } from '../../../models/speedtrack.models';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './main-layout.component.html',
-  styleUrls: ['./main-layout.component.css']
+  styleUrls: ['./main-layout.component.css'],
 })
 export class MainLayoutComponent implements OnInit {
   isSidebarOpen = false;
   isUserMenuOpen = false;
-  
+
   // Role Flags
   isAdmin = false;
   isOperator = false;
   isCourier = false;
-  
+
   currentUser: any = null;
+
+  getRoleLabel(role: string): string {
+    switch (role) {
+      case UserRole.ADMIN:
+        return 'Administrador';
+      case UserRole.OPERATOR:
+        return 'Operador de Logística';
+      case UserRole.COURIER:
+        return 'Entregador';
+      default:
+        return role; // Fallback to the original code if unknown
+    }
+  }
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -34,8 +47,12 @@ export class MainLayoutComponent implements OnInit {
     this.isCourier = role === UserRole.COURIER;
   }
 
-  toggleSidebar() { this.isSidebarOpen = !this.isSidebarOpen; }
-  toggleUserMenu() { this.isUserMenuOpen = !this.isUserMenuOpen; }
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
+  toggleUserMenu() {
+    this.isUserMenuOpen = !this.isUserMenuOpen;
+  }
 
   logout() {
     this.authService.logout();

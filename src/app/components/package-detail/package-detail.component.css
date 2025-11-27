@@ -142,6 +142,66 @@
 .btn-secondary { background-color: transparent; border: 1px solid var(--primary); color: var(--primary); }
 .btn-destructive { background-color: var(--error); color: white; }
 
+/* ... existing styles ... */
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+}
+
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 500px;
+    transform: translateY(20px);
+    transition: transform 0.3s;
+}
+
+.modal-overlay.show .modal {
+    transform: translateY(0);
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--light-gray);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title { font-size: 20px; font-weight: 600; }
+
+.modal-close {
+    background: none; border: none; font-size: 24px;
+    cursor: pointer; color: var(--medium-gray);
+}
+
+.modal-body { padding: 20px; }
+
+.modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid var(--light-gray);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
 /* Mobile */
 @media (max-width: 768px) {
     .encomenda-details { grid-template-columns: 1fr; }

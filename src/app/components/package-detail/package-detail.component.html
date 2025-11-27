@@ -8,6 +8,7 @@
   </div>
 
   <div class="encomenda-details">
+    
     <div class="encomenda-info">
       
       <div class="encomenda-header">
@@ -19,9 +20,9 @@
 
       <div class="encomenda-actions">
         
-        <button *ngIf="package.currentStatus === PackageStatus.WAITING_ASSIGNMENT" 
+        <button *ngIf="package.currentStatus === PackageStatus.WAITING_ASSIGNMENT || package.currentStatus === PackageStatus.RETURNED_WAREHOUSE" 
                 class="btn btn-primary" 
-                (click)="changeStatus(PackageStatus.WAITING_WITHDRAWAL)">
+                (click)="openAssignModal()">
           <i class="material-symbols-outlined">local_shipping</i> Atribuir Entregador
         </button>
 
@@ -45,10 +46,36 @@
 
          <button *ngIf="package.currentStatus === PackageStatus.OUT_FOR_DELIVERY || package.currentStatus === PackageStatus.WITH_COURIER" 
                 class="btn btn-destructive" 
-                (click)="changeStatus(PackageStatus.RETURNED_WAREHOUSE)">
+                (click)="changeStatus(PackageStatus.RETURN_TO_WHAREHOUSE_PENDING)">
           <i class="material-symbols-outlined">keyboard_return</i> Devolver
         </button>
 
+         <button *ngIf="package.currentStatus === PackageStatus.RETURN_TO_WHAREHOUSE_PENDING" 
+                class="btn btn-destructive" 
+                (click)="changeStatus(PackageStatus.RETURNED_WAREHOUSE)">
+          <i class="material-symbols-outlined">assignment_return</i>Aceitar Devolução
+        </button>         
+        
+         <button *ngIf="package.currentStatus === PackageStatus.RETURNED_WAREHOUSE" 
+                class="btn btn-destructive" 
+                (click)="changeStatus(PackageStatus.RETURNED_SENDER)">
+          <i class="material-symbols-outlined">assignment_return</i> Devolver ao Contratante
+        </button>
+
+      </div>
+
+      <div class="info-card" *ngIf="package.currentCourier">
+        <h3 class="info-card-title">
+          <i class="material-symbols-outlined">local_shipping</i> Entregador Responsável
+        </h3>
+        <div class="info-row">
+          <div class="info-label">Nome:</div>
+          <div class="info-value">{{ package.currentCourier.name }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Email:</div>
+          <div class="info-value">{{ package.currentCourier.email }}</div>
+        </div>
       </div>
 
       <div class="info-card">
@@ -81,6 +108,10 @@
           <div class="info-label">Cidade/UF:</div>
           <div class="info-value">{{ package.recipientCity }} / {{ package.recipientState }}</div>
         </div>
+        <div class="info-row">
+            <div class="info-label">Telefone:</div>
+            <div class="info-value">{{ package.recipientPhone }}</div>
+        </div>
       </div>
 
       <div class="info-card">
@@ -105,13 +136,15 @@
     </div>
 
     <div class="history-timeline">
-      <h3 class="timeline-title">Histórico</h3>
+      <h3 class="timeline-title">Histórico de Atualizações</h3>
       
       <div class="timeline-item" *ngFor="let event of package.history">
         <div class="timeline-date">{{ event.actionDate | date:'dd/MM/yyyy HH:mm' }}</div>
         <div class="timeline-content">
           <strong>{{ event.actionType }}</strong>
-          <p *ngIf="event.notes" style="font-size: 13px; margin-top: 2px;">{{ event.notes }}</p>
+          <p *ngIf="event.notes" style="font-size: 13px; margin-top: 2px; color: var(--medium-gray);">
+            {{ event.notes }}
+          </p>
           <div *ngIf="event.statusSnapshot" class="timeline-status" [ngClass]="getStatusClass(event.statusSnapshot)">
             {{ formatStatus(event.statusSnapshot) }}
           </div>
@@ -119,9 +152,38 @@
       </div>
     </div>
   </div>
+</div>
 
+<div class="modal-overlay" [class.show]="isAssignModalOpen">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">Atribuir a Entregador</h3>
+      <button class="modal-close" (click)="closeAssignModal()">&times;</button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Selecione o entregador:</label>
+        <select [(ngModel)]="selectedCourierId" class="form-control">
+          <option [ngValue]="null">Selecione...</option>
+          <option *ngFor="let courier of couriers" [value]="courier.id">
+            {{ courier.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeAssignModal()">Cancelar</button>
+      <button class="btn btn-primary" (click)="confirmAssignment()" [disabled]="!selectedCourierId">
+        Confirmar
+      </button>
+    </div>
+  </div>
 </div>
 
 <ng-template #loading>
-  <div class="page-content">Carregando detalhes...</div>
+  <div class="page-content" style="text-align: center; margin-top: 50px;">
+    <p>Carregando detalhes da encomenda...</p>
+  </div>
 </ng-template>
