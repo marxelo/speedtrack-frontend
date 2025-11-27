@@ -9,6 +9,7 @@ interface LoginResponse {
   name: string;
   email: string;
   role: UserRole;
+  id: number;
 }
 
 @Injectable({
@@ -33,7 +34,7 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { email, password }).pipe(
       tap(response => {
         const user: User = {
-          id: 0, // ID handled by backend, simple mapping here
+          id: response.id, // ID handled by backend, simple mapping here
           name: response.name,
           email: response.email,
           role: response.role,

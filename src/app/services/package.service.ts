@@ -17,7 +17,7 @@ export class PackageService {
   private apiUrl = `${environment.apiUrl}/packages`;
   private dashboardUrl = `${environment.apiUrl}/dashboard`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   // --- Dashboard ---
   getDashboardStats(): Observable<DashboardStats> {
@@ -29,6 +29,8 @@ export class PackageService {
     status?: string;
     partner?: string;
     courierId?: number;
+    startDate?: string;
+    endDate?: string;
   }): Observable<Package[]> {
     let params = new HttpParams();
 
@@ -36,6 +38,11 @@ export class PackageService {
       if (filters.status) params = params.set('status', filters.status);
       if (filters.partner) params = params.set('partner', filters.partner);
       if (filters.courierId) params = params.set('courierId', filters.courierId);
+
+      // Append Time to ensure full day coverage
+      // Frontend inputs usually send "YYYY-MM-DD"
+      if (filters.startDate) params = params.set('startDate', filters.startDate + 'T00:00:00');
+      if (filters.endDate) params = params.set('endDate', filters.endDate + 'T23:59:59');
     }
 
     return this.http.get<Package[]>(this.apiUrl, { params });
@@ -51,7 +58,12 @@ export class PackageService {
 
   // --- Actions ---
   // Update the signature to accept number | undefined
-  updateStatus(id: number, newStatus: PackageStatus, notes?: string, courierId?: number): Observable<Package> {
+  updateStatus(
+    id: number,
+    newStatus: PackageStatus,
+    notes?: string,
+    courierId?: number
+  ): Observable<Package> {
     let params = new HttpParams().set('newStatus', newStatus);
 
     if (notes) params = params.set('notes', notes);

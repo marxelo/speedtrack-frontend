@@ -1,5 +1,4 @@
 <div class="page-content" *ngIf="package; else loading">
-  
   <div class="page-header">
     <h1 class="page-title">Detalhes da Encomenda</h1>
     <button class="btn btn-secondary" (click)="goBack()">
@@ -8,9 +7,7 @@
   </div>
 
   <div class="encomenda-details">
-    
     <div class="encomenda-info">
-      
       <div class="encomenda-header">
         <h2 class="encomenda-title">{{ package.trackingCode }}</h2>
         <div class="status-badge" [ngClass]="getStatusClass(package.currentStatus)">
@@ -19,49 +16,67 @@
       </div>
 
       <div class="encomenda-actions">
-        
-        <button *ngIf="package.currentStatus === PackageStatus.WAITING_ASSIGNMENT || package.currentStatus === PackageStatus.RETURNED_WAREHOUSE" 
-                class="btn btn-primary" 
-                (click)="openAssignModal()">
+        <button
+          *ngIf="
+            package.currentStatus === PackageStatus.WAITING_ASSIGNMENT ||
+            package.currentStatus === PackageStatus.RETURNED_WAREHOUSE
+          "
+          class="btn btn-primary"
+          (click)="openAssignModal()"
+        >
           <i class="material-symbols-outlined">local_shipping</i> Atribuir Entregador
         </button>
 
-        <button *ngIf="package.currentStatus === PackageStatus.WAITING_WITHDRAWAL" 
-                class="btn btn-primary" 
-                (click)="changeStatus(PackageStatus.WITH_COURIER)">
+        <button
+          *ngIf="package.currentStatus === PackageStatus.WAITING_WITHDRAWAL"
+          class="btn btn-primary"
+          (click)="changeStatus(PackageStatus.WITH_COURIER)"
+        >
           <i class="material-symbols-outlined">check_circle</i> Confirmar Retirada
         </button>
 
-        <button *ngIf="package.currentStatus === PackageStatus.WITH_COURIER" 
-                class="btn btn-primary" 
-                (click)="changeStatus(PackageStatus.OUT_FOR_DELIVERY)">
+        <button
+          *ngIf="package.currentStatus === PackageStatus.WITH_COURIER"
+          class="btn btn-primary"
+          (click)="changeStatus(PackageStatus.OUT_FOR_DELIVERY)"
+        >
           <i class="material-symbols-outlined">directions_bike</i> Saída para Entrega
         </button>
 
-        <button *ngIf="package.currentStatus === PackageStatus.OUT_FOR_DELIVERY" 
-                class="btn btn-primary" 
-                (click)="changeStatus(PackageStatus.DELIVERED)">
+        <button
+          *ngIf="package.currentStatus === PackageStatus.OUT_FOR_DELIVERY"
+          class="btn btn-primary"
+          (click)="changeStatus(PackageStatus.DELIVERED)"
+        >
           <i class="material-symbols-outlined">done_all</i> Registrar Entrega
         </button>
 
-         <button *ngIf="package.currentStatus === PackageStatus.OUT_FOR_DELIVERY || package.currentStatus === PackageStatus.WITH_COURIER" 
-                class="btn btn-destructive" 
-                (click)="changeStatus(PackageStatus.RETURN_TO_WHAREHOUSE_PENDING)">
+        <button
+          *ngIf="
+            package.currentStatus === PackageStatus.OUT_FOR_DELIVERY ||
+            package.currentStatus === PackageStatus.WITH_COURIER
+          "
+          class="btn btn-destructive"
+          (click)="changeStatus(PackageStatus.RETURN_TO_WAREHOUSE_PENDING)"
+        >
           <i class="material-symbols-outlined">keyboard_return</i> Devolver
         </button>
 
-         <button *ngIf="package.currentStatus === PackageStatus.RETURN_TO_WHAREHOUSE_PENDING" 
-                class="btn btn-destructive" 
-                (click)="changeStatus(PackageStatus.RETURNED_WAREHOUSE)">
+        <button
+          *ngIf="package.currentStatus === PackageStatus.RETURN_TO_WAREHOUSE_PENDING"
+          class="btn btn-destructive"
+          (click)="changeStatus(PackageStatus.RETURNED_WAREHOUSE)"
+        >
           <i class="material-symbols-outlined">assignment_return</i>Aceitar Devolução
-        </button>         
-        
-         <button *ngIf="package.currentStatus === PackageStatus.RETURNED_WAREHOUSE" 
-                class="btn btn-destructive" 
-                (click)="changeStatus(PackageStatus.RETURNED_SENDER)">
-          <i class="material-symbols-outlined">assignment_return</i> Devolver ao Contratante
         </button>
 
+        <button
+          *ngIf="package.currentStatus === PackageStatus.RETURNED_WAREHOUSE"
+          class="btn btn-destructive"
+          (click)="changeStatus(PackageStatus.RETURNED_SENDER)"
+        >
+          <i class="material-symbols-outlined">assignment_return</i> Devolver ao Contratante
+        </button>
       </div>
 
       <div class="info-card" *ngIf="package.currentCourier">
@@ -109,15 +124,13 @@
           <div class="info-value">{{ package.recipientCity }} / {{ package.recipientState }}</div>
         </div>
         <div class="info-row">
-            <div class="info-label">Telefone:</div>
-            <div class="info-value">{{ package.recipientPhone }}</div>
+          <div class="info-label">Telefone:</div>
+          <div class="info-value">{{ package.recipientPhone }}</div>
         </div>
       </div>
 
       <div class="info-card">
-        <h3 class="info-card-title">
-          <i class="material-symbols-outlined">inventory</i> Itens
-        </h3>
+        <h3 class="info-card-title"><i class="material-symbols-outlined">inventory</i> Itens</h3>
         <table class="items-table">
           <thead>
             <tr>
@@ -137,15 +150,22 @@
 
     <div class="history-timeline">
       <h3 class="timeline-title">Histórico de Atualizações</h3>
-      
+
       <div class="timeline-item" *ngFor="let event of package.history">
-        <div class="timeline-date">{{ event.actionDate | date:'dd/MM/yyyy HH:mm' }}</div>
+        <div class="timeline-date">{{ event.actionDate | date : 'dd/MM/yyyy HH:mm' }}</div>
         <div class="timeline-content">
           <strong>{{ event.actionType }}</strong>
-          <p *ngIf="event.notes" style="font-size: 13px; margin-top: 2px; color: var(--medium-gray);">
+          <p
+            *ngIf="event.notes"
+            style="font-size: 13px; margin-top: 2px; color: var(--medium-gray)"
+          >
             {{ event.notes }}
           </p>
-          <div *ngIf="event.statusSnapshot" class="timeline-status" [ngClass]="getStatusClass(event.statusSnapshot)">
+          <div
+            *ngIf="event.statusSnapshot"
+            class="timeline-status"
+            [ngClass]="getStatusClass(event.statusSnapshot)"
+          >
             {{ formatStatus(event.statusSnapshot) }}
           </div>
         </div>
@@ -160,7 +180,7 @@
       <h3 class="modal-title">Atribuir a Entregador</h3>
       <button class="modal-close" (click)="closeAssignModal()">&times;</button>
     </div>
-    
+
     <div class="modal-body">
       <div class="form-group">
         <label>Selecione o entregador:</label>
@@ -172,7 +192,7 @@
         </select>
       </div>
     </div>
-    
+
     <div class="modal-footer">
       <button class="btn btn-secondary" (click)="closeAssignModal()">Cancelar</button>
       <button class="btn btn-primary" (click)="confirmAssignment()" [disabled]="!selectedCourierId">
@@ -183,7 +203,7 @@
 </div>
 
 <ng-template #loading>
-  <div class="page-content" style="text-align: center; margin-top: 50px;">
+  <div class="page-content" style="text-align: center; margin-top: 50px">
     <p>Carregando detalhes da encomenda...</p>
   </div>
 </ng-template>

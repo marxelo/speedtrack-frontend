@@ -1,70 +1,100 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { PackageService } from '../../services/package.service';
-import { Package, PackageStatus, User } from '../../models/speedtrack.models';
+import { AuthService } from '../../services/auth.service'; // Import Auth
+import { Package, PackageStatus, User, UserRole } from '../../models/speedtrack.models';
 
 @Component({
   selector: 'app-consult-packages',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './consult-packages.component.html',
-  styleUrls: ['./consult-packages.component.css']
+  styleUrls: ['./consult-packages.component.css'],
 })
 export class ConsultPackagesComponent implements OnInit {
   filterForm: FormGroup;
   packages: Package[] = [];
   couriers: User[] = [];
-  
-  // Expose Enum to HTML
+
+  // Role Logic
+  currentUser: any = null;
+  isCourier = false;
+
   PackageStatus = PackageStatus;
   statusOptions = Object.values(PackageStatus);
 
   constructor(
     private fb: FormBuilder,
-    private packageService: PackageService
+    private packageService: PackageService,
+    private authService: AuthService, // Inject Auth
+    private cdr: ChangeDetectorRef
   ) {
     this.filterForm = this.fb.group({
       status: [''],
       partner: [''],
-      courierId: ['']
+      courierId: [''],
+      startDate: [''], // New Field
+      endDate: [''], // New Field
     });
   }
 
   ngOnInit(): void {
+    // 1. Get User Info
+    const role = this.authService.getUserRole();
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    this.isCourier = role === UserRole.COURIER;
+
+    // 2. If Courier, pre-set the filter (Optional, but good for state)
+    // We don't disable the control, we just hide it in HTML and enforce in loadPackages()
+
     this.loadPackages();
-    this.loadCouriers();
+
+    // Only load courier list if user is NOT a courier (to populate dropdown)
+    if (!this.isCourier) {
+      this.loadCouriers();
+    }
   }
 
   loadPackages() {
-    // Convert empty strings to undefined to avoid sending empty params
     const filters = this.filterForm.value;
     const cleanFilters: any = {};
-    
+
+    // Standard Filters
     if (filters.status) cleanFilters.status = filters.status;
     if (filters.partner) cleanFilters.partner = filters.partner;
-    if (filters.courierId) cleanFilters.courierId = filters.courierId;
+    if (filters.startDate) cleanFilters.startDate = filters.startDate;
+    if (filters.endDate) cleanFilters.endDate = filters.endDate;
+
+    // --- COURIER RESTRICTION LOGIC ---
+    if (this.isCourier) {
+      // Force their own ID
+      cleanFilters.courierId = this.currentUser.id;
+    } else if (filters.courierId) {
+      // Admin/Operator can choose
+      cleanFilters.courierId = filters.courierId;
+    }
 
     this.packageService.getPackages(cleanFilters).subscribe({
-      next: (data) => this.packages = data,
-      error: (err) => console.error(err)
+      next: (data) => {
+        this.packages = data;
+        this.cdr.detectChanges(); // <--- 3. FORCE UPDATE HERE
+      },
+      error: (err) => console.error(err),
     });
   }
 
   loadCouriers() {
-    this.packageService.getCouriers().subscribe({
-      next: (data) => this.couriers = data,
-      error: (err) => console.error(err)
-    });
+    this.packageService.getCouriers().subscribe((data) => (this.couriers = data));
   }
 
   clearFilters() {
-    this.filterForm.reset({ status: '', partner: '', courierId: '' });
+    this.filterForm.reset({ status: '', partner: '', courierId: '', startDate: '', endDate: '' });
     this.loadPackages();
   }
 
-  // --- Helpers ---
+  // ... helpers (getStatusClass, formatStatus) ...
   getStatusClass(status: string): string {
     switch (status) {
       case PackageStatus.WAITING_ASSIGNMENT:
@@ -76,19 +106,24 @@ export class ConsultPackagesComponent implements OnInit {
       case PackageStatus.DELIVERED:
         return 'status-delivered';
       case PackageStatus.RETURNED_WAREHOUSE:
+      case PackageStatus.RETURN_TO_WAREHOUSE_PENDING:
+      case PackageStatus.RETURNED_SENDER: 
         return 'status-returned';
-      default: return '';
+      default:
+        return '';
     }
   }
 
   formatStatus(status: string): string {
     const map: any = {
-      'WAITING_ASSIGNMENT': 'Aguardando Atribuição',
-      'WAITING_WITHDRAWAL': 'Aguardando Retirada',
-      'WITH_COURIER': 'Com Entregador',
-      'OUT_FOR_DELIVERY': 'Saiu para Entrega',
-      'DELIVERED': 'Entregue',
-      'RETURNED_WAREHOUSE': 'Devolvida ao Armazém'
+      WAITING_ASSIGNMENT: 'Aguardando Atribuição',
+      WAITING_WITHDRAWAL: 'Aguardando Retirada',
+      WITH_COURIER: 'Com Entregador',
+      OUT_FOR_DELIVERY: 'Saiu para Entrega',
+      DELIVERED: 'Entregue',
+      RETURNED_WAREHOUSE: 'Devolvida ao Armazém',
+      RETURN_TO_WAREHOUSE_PENDING: 'Devolução ao Armazém Pendente',
+      RETURNED_SENDER: 'Devolução ao Contrante',
     };
     return map[status] || status;
   }
