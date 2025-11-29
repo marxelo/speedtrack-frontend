@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { UserRole } from '../../models/speedtrack.models';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
   loginForm: FormGroup;
@@ -20,11 +20,12 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
   }
 
@@ -38,7 +39,10 @@ export class LoginComponent {
 
     this.authService.login(email, password).subscribe({
       next: (response) => {
-// 2. Dynamic Redirect Logic
+        this.isLoading = false;
+        // Navigation typically triggers its own view update, but we can force it just in case
+        this.cdr.detectChanges();
+        // 2. Dynamic Redirect Logic
         if (response.role === UserRole.COURIER) {
           // Couriers go directly to Consult page
           this.router.navigate(['/app/consult']);
@@ -54,7 +58,8 @@ export class LoginComponent {
         } else {
           this.errorMessage = 'Erro ao conectar com o servidor.';
         }
-      }
+        this.cdr.detectChanges();
+      },
     });
   }
 }
