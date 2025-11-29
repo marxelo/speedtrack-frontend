@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-manage-users',
@@ -7,5 +9,9 @@ import { Component } from '@angular/core';
   styleUrl: './manage-users.component.css',
 })
 export class ManageUsersComponent {
+  constructor( private location: Location) {}
 
+  goBack() {
+    this.location.back();
+  }
 }

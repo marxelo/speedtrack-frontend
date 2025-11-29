@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PackageService } from '../../services/package.service';
-import { DashboardStats, Package, PackageStatus } from '../../models/speedtrack.models';
+import { DashboardStats, Package } from '../../models/speedtrack.models';
 import { map, Observable } from 'rxjs';
 import { StatusNamePipe, StatusClassPipe } from '../../pipes/status.pipes';
 

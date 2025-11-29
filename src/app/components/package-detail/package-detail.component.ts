@@ -110,8 +110,34 @@ export class PackageDetailComponent implements OnInit {
       });
     }
   }
+
+// New Method
+  handleAddNote() {
+    if (!this.package) return;
+
+    const note = prompt("Digite a observação:");
+    
+    // Check if user clicked Cancel or typed empty string
+    if (note && note.trim().length > 0) {
+      this.isLoading = true;
+      this.packageService.addNote(this.package.id, note).subscribe({
+        next: (updatedPackage) => {
+          this.package = updatedPackage;
+          this.isLoading = false;
+          this.cdr.detectChanges(); // Update UI
+        },
+        error: (err) => {
+          console.error(err);
+          this.isLoading = false;
+          alert('Erro ao adicionar nota.');
+          this.cdr.detectChanges();
+        }
+      });
+    }
+  }  
+
   goBack() {
     this.location.back();
   }
-
+  
 }

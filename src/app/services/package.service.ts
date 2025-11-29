@@ -81,4 +81,8 @@ export class PackageService {
   trackPackage(code: string): Observable<Package> {
     return this.http.get<Package>(`${this.apiUrl}/tracking/${code}`);
   }
+// Add notes
+  addNote(id: number, text: string): Observable<Package> {
+    return this.http.post<Package>(`${this.apiUrl}/${id}/notes`, { text });
+  }
 }
