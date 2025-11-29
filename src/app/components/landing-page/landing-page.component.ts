@@ -10,26 +10,23 @@ import { Package, PackageStatus } from '../../models/speedtrack.models';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './landing-page.component.html',
-  styleUrls: ['./landing-page.component.css']
+  styleUrls: ['./landing-page.component.css'],
 })
 export class LandingPageComponent implements OnInit {
   // Search State
   trackingCode: string = '';
   trackingResult: Package | null = null;
-  
+
   // Bot Protection State
   mathChallenge: string = '';
   mathAnswer: number = 0;
   userMathInput: string = '';
-  
+
   // UI State
   isLoading = false;
   errorMessage: string = '';
 
-  constructor(
-    private packageService: PackageService,
-    private cdr: ChangeDetectorRef
-  ) {}
+  constructor(private packageService: PackageService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.generateMathProblem();
@@ -38,16 +35,16 @@ export class LandingPageComponent implements OnInit {
   generateMathProblem() {
     const num1 = Math.floor(Math.random() * 10) + 1;
     const num2 = Math.floor(Math.random() * 10) + 1;
-    
+
     // Randomize operation (Add or Subtract)
     if (Math.random() > 0.5) {
-      this.mathChallenge = `${num1} + ${num2} = ?`;
+      this.mathChallenge = `${num1} + ${num2}?`;
       this.mathAnswer = num1 + num2;
     } else {
       // Ensure positive result for simplicity
       const max = Math.max(num1, num2);
       const min = Math.min(num1, num2);
-      this.mathChallenge = `${max} - ${min} = ?`;
+      this.mathChallenge = `${max} - ${min}?`;
       this.mathAnswer = max - min;
     }
   }
@@ -73,10 +70,17 @@ export class LandingPageComponent implements OnInit {
 
     // 4. Perform Search
     this.isLoading = true;
+
     this.packageService.trackPackage(this.trackingCode).subscribe({
       next: (data) => {
         this.trackingResult = data;
         this.isLoading = false;
+
+        // --- UX IMPROVEMENT: Reset Form on Success ---
+        this.trackingCode = '';
+        this.userMathInput = '';
+        this.generateMathProblem();
+
         this.cdr.detectChanges(); // Force update
       },
       error: (err) => {
@@ -87,8 +91,9 @@ export class LandingPageComponent implements OnInit {
           this.errorMessage = 'Erro ao buscar encomenda. Tente novamente.';
         }
         this.generateMathProblem(); // Reset math on error
+        this.userMathInput = '';
         this.cdr.detectChanges(); // Force update
-      }
+      },
     });
   }
 
@@ -96,23 +101,28 @@ export class LandingPageComponent implements OnInit {
   getStatusClass(status: string): string {
     switch (status) {
       case 'WAITING_ASSIGNMENT':
-      case 'WAITING_WITHDRAWAL': return 'status-waiting';
+      case 'WAITING_WITHDRAWAL':
+        return 'status-waiting';
       case 'WITH_COURIER':
-      case 'OUT_FOR_DELIVERY': return 'status-in-transit';
-      case 'DELIVERED': return 'status-delivered';
-      case 'RETURNED_WAREHOUSE': return 'status-returned';
-      default: return '';
+      case 'OUT_FOR_DELIVERY':
+        return 'status-in-transit';
+      case 'DELIVERED':
+        return 'status-delivered';
+      case 'RETURNED_WAREHOUSE':
+        return 'status-returned';
+      default:
+        return '';
     }
   }
-  
+
   formatStatus(status: string): string {
     const map: any = {
-      'WAITING_ASSIGNMENT': 'Aguardando Atribuição',
-      'WAITING_WITHDRAWAL': 'Aguardando Retirada',
-      'WITH_COURIER': 'Com Entregador',
-      'OUT_FOR_DELIVERY': 'Saiu para Entrega',
-      'DELIVERED': 'Entregue',
-      'RETURNED_WAREHOUSE': 'Devolvida ao Armazém'
+      WAITING_ASSIGNMENT: 'Aguardando Atribuição',
+      WAITING_WITHDRAWAL: 'Aguardando Retirada',
+      WITH_COURIER: 'Com Entregador',
+      OUT_FOR_DELIVERY: 'Saiu para Entrega',
+      DELIVERED: 'Entregue',
+      RETURNED_WAREHOUSE: 'Devolvida ao Armazém',
     };
     return map[status] || status;
   }
