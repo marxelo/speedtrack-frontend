@@ -1,8 +1,8 @@
-<div class="page-content">  
+<div class="page-content">
   <div class="page-header">
-    <h1 class="page-title">Dashboard</h1> 
-    <div id="dashboard-actions"> 
-      <button class="btn btn-primary"  routerLink="/app/register">
+    <h1 class="page-title">Dashboard</h1>
+    <div id="dashboard-actions">
+      <button class="btn btn-primary" routerLink="/app/register">
         <i class="material-symbols-outlined">add</i> Registrar Encomenda
       </button>
     </div>
@@ -30,9 +30,7 @@
     </div>
 
     <div class="card">
-      <div class="card-title">
-        <i class="material-symbols-outlined">done_all</i> Entregues
-      </div>
+      <div class="card-title"><i class="material-symbols-outlined">done_all</i> Entregues</div>
       <div class="card-value">{{ stats.delivered }}</div>
       <div class="card-footer positive">
         <i class="material-symbols-outlined">check</i> Total acumulado
@@ -40,9 +38,7 @@
     </div>
 
     <div class="card">
-      <div class="card-title">
-        <i class="material-symbols-outlined">warning</i> Ocorrências
-      </div>
+      <div class="card-title"><i class="material-symbols-outlined">warning</i> Ocorrências</div>
       <div class="card-value">{{ stats.issues }}</div>
       <div class="card-footer negative">
         <i class="material-symbols-outlined">priority_high</i> Requer atenção
@@ -70,36 +66,46 @@
           <th>Atualizado em</th>
         </tr>
       </thead>
-<tbody *ngIf="recentPackages$ | async as packages; else loading">
-  
-  <tr *ngFor="let pack of packages" style="cursor: pointer" [routerLink]="['/app/package', pack.id]">
-    <td><strong>{{ pack.trackingCode }}</strong></td>
-    <td>{{ pack.recipientName }}</td>
-    <td>
-      <span class="status-badge" [ngClass]="getStatusClass(pack.currentStatus)">
-        {{ formatStatus(pack.currentStatus) }}
-      </span>
-    </td>
-    <td>{{ pack.currentCourier?.name || '-' }}</td>
-    <td>
-       {{ (pack.history.length > 0 ? pack.history[pack.history.length-1].actionDate : pack.createdAt) | date:'dd/MM/yyyy HH:mm' }}
-    </td>
-  </tr>
+      <tbody *ngIf="recentPackages$ | async as packages; else loading">
+        <tr
+          *ngFor="let pack of packages"
+          style="cursor: pointer"
+          [routerLink]="['/app/package', pack.id]"
+        >
+          <td>
+            <strong>{{ pack.trackingCode }}</strong>
+          </td>
+          <td>{{ pack.recipientName }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="pack.currentStatus | statusClass">
+              {{ pack.currentStatus | statusName }}
+            </span>
+          </td>
+          <td>{{ pack.currentCourier?.name || '-' }}</td>
+          <td>
+            {{
+              (pack.history.length > 0
+                ? pack.history[pack.history.length - 1].actionDate
+                : pack.createdAt
+              ) | date : 'dd/MM/yyyy HH:mm'
+            }}
+          </td>
+        </tr>
 
-  <tr *ngIf="packages.length === 0">
-    <td colspan="5" style="text-align: center; padding: 20px; color: var(--medium-gray);">
-      Nenhuma encomenda registrada ainda.
-    </td>
-  </tr>
-</tbody>
+        <tr *ngIf="packages.length === 0">
+          <td colspan="5" style="text-align: center; padding: 20px; color: var(--medium-gray)">
+            Nenhuma encomenda registrada ainda.
+          </td>
+        </tr>
+      </tbody>
 
-<ng-template #loading>
-  <tbody>
-    <tr>
-      <td colspan="5" style="text-align: center; padding: 20px;">Carregando...</td>
-    </tr>
-  </tbody>
-</ng-template>
+      <ng-template #loading>
+        <tbody>
+          <tr>
+            <td colspan="5" style="text-align: center; padding: 20px">Carregando...</td>
+          </tr>
+        </tbody>
+      </ng-template>
     </table>
   </div>
 </div>

@@ -4,14 +4,13 @@
   </div>
 
   <form [formGroup]="filterForm" (ngSubmit)="loadPackages()" class="form-container">
-    
     <div class="form-row">
       <div class="form-group">
         <label>Situação</label>
         <select formControlName="status" class="form-control">
           <option value="">Todas</option>
           <option *ngFor="let status of statusOptions" [value]="status">
-            {{ formatStatus(status) }}
+            {{ statusLabels[status] }}
           </option>
         </select>
       </div>
@@ -31,16 +30,14 @@
     <div class="form-row">
       <div class="form-group">
         <label>Data Início</label>
-        <input type="date" formControlName="startDate" class="form-control">
+        <input type="date" formControlName="startDate" class="form-control" />
       </div>
 
       <div class="form-group">
         <label>Data Fim</label>
-        <input type="date" formControlName="endDate" class="form-control">
+        <input type="date" formControlName="endDate" class="form-control" />
       </div>
-
     </div>
-
 
     <div class="form-row">
       <div class="form-group" *ngIf="!isCourier">
@@ -64,7 +61,7 @@
     </div>
   </form>
 
-  <div class="table-container" style="margin-top: 25px;">
+  <div class="table-container" style="margin-top: 25px">
     <table>
       <thead>
         <tr>
@@ -77,23 +74,34 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let pack of packages" style="cursor: pointer;" [routerLink]="['/app/package', pack.id]">
-          <td><strong>{{ pack.trackingCode }}</strong></td>
+        <tr
+          *ngFor="let pack of packages"
+          style="cursor: pointer"
+          [routerLink]="['/app/package', pack.id]"
+        >
+          <td>
+            <strong>{{ pack.trackingCode }}</strong>
+          </td>
           <td>{{ pack.partnerCode }}</td>
           <td>{{ pack.recipientName }}</td>
           <td>
-            <span class="status-badge" [ngClass]="getStatusClass(pack.currentStatus)">
-              {{ formatStatus(pack.currentStatus) }}
+            <span class="status-badge" [ngClass]="pack.currentStatus | statusClass">
+              {{ pack.currentStatus | statusName }}
             </span>
           </td>
           <td>{{ pack.currentCourier?.name || '-' }}</td>
           <td>
-            {{ (pack.history.length > 0 ? pack.history[pack.history.length-1].actionDate : pack.createdAt) | date:'dd/MM/yyyy HH:mm' }}
+            {{
+              (pack.history.length > 0
+                ? pack.history[pack.history.length - 1].actionDate
+                : pack.createdAt
+              ) | date : 'dd/MM/yyyy HH:mm'
+            }}
           </td>
         </tr>
-        
+
         <tr *ngIf="packages.length === 0">
-          <td colspan="6" style="text-align: center; padding: 30px; color: var(--medium-gray);">
+          <td colspan="6" style="text-align: center; padding: 30px; color: var(--medium-gray)">
             Nenhuma encomenda encontrada.
           </td>
         </tr>

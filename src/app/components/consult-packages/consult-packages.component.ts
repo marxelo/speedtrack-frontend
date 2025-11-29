@@ -5,11 +5,13 @@ import { RouterModule } from '@angular/router';
 import { PackageService } from '../../services/package.service';
 import { AuthService } from '../../services/auth.service'; // Import Auth
 import { Package, PackageStatus, User, UserRole } from '../../models/speedtrack.models';
+import { STATUS_LABELS } from '../../utils/package-status.utils'; // Import Map
+import { StatusNamePipe, StatusClassPipe } from '../../pipes/status.pipes'; // Import Pipes
 
 @Component({
   selector: 'app-consult-packages',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, StatusNamePipe, StatusClassPipe],
   templateUrl: './consult-packages.component.html',
   styleUrls: ['./consult-packages.component.css'],
 })
@@ -23,7 +25,8 @@ export class ConsultPackagesComponent implements OnInit {
   isCourier = false;
 
   PackageStatus = PackageStatus;
-  statusOptions = Object.values(PackageStatus);
+  statusLabels = STATUS_LABELS;
+  statusOptions = Object.values(PackageStatus) as PackageStatus[];
 
   constructor(
     private fb: FormBuilder,
@@ -94,37 +97,4 @@ export class ConsultPackagesComponent implements OnInit {
     this.loadPackages();
   }
 
-  // ... helpers (getStatusClass, formatStatus) ...
-  getStatusClass(status: string): string {
-    switch (status) {
-      case PackageStatus.WAITING_ASSIGNMENT:
-      case PackageStatus.WAITING_WITHDRAWAL:
-        return 'status-waiting';
-      case PackageStatus.WITH_COURIER:
-      case PackageStatus.OUT_FOR_DELIVERY:
-        return 'status-in-transit';
-      case PackageStatus.DELIVERED:
-        return 'status-delivered';
-      case PackageStatus.RETURNED_WAREHOUSE:
-      case PackageStatus.RETURN_TO_WAREHOUSE_PENDING:
-      case PackageStatus.RETURNED_SENDER: 
-        return 'status-returned';
-      default:
-        return '';
-    }
-  }
-
-  formatStatus(status: string): string {
-    const map: any = {
-      WAITING_ASSIGNMENT: 'Aguardando Atribuição',
-      WAITING_WITHDRAWAL: 'Aguardando Retirada',
-      WITH_COURIER: 'Com Entregador',
-      OUT_FOR_DELIVERY: 'Saiu para Entrega',
-      DELIVERED: 'Entregue',
-      RETURNED_WAREHOUSE: 'Devolvida ao Armazém',
-      RETURN_TO_WAREHOUSE_PENDING: 'Devolução ao Armazém Pendente',
-      RETURNED_SENDER: 'Devolução ao Contrante',
-    };
-    return map[status] || status;
-  }
 }

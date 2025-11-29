@@ -62,9 +62,8 @@
               Código original ({{ trackingResult.partnerName }}): {{ trackingResult.partnerCode }}
             </p>
           </div>
-
-          <span class="status-badge" [ngClass]="getStatusClass(trackingResult.currentStatus)">
-             {{ formatStatus(trackingResult.currentStatus) }}
+          <span class="status-badge" [ngClass]="trackingResult.currentStatus | statusClass">
+              {{ trackingResult.currentStatus | statusName }}
           </span>
         </div>
 
@@ -73,9 +72,9 @@
               <div class="timeline-date">{{ event.actionDate | date:'dd/MM/yyyy HH:mm' }}</div>
               <div class="timeline-content">
                 <strong>{{ event.actionType }}</strong>
-                <p *ngIf="event.notes">{{ event.notes }}</p>
-                <div *ngIf="event.statusSnapshot" class="timeline-status" [ngClass]="getStatusClass(event.statusSnapshot)">
-                  {{ formatStatus(event.statusSnapshot) }}
+                <p *ngIf="event.notes">{{ event.notes }}</p> <!-- {{ event.statusSnapshot | statusName }} -->
+                <div *ngIf="event.statusSnapshot" class="timeline-status" [ngClass]="event.statusSnapshot | statusClass">
+                  {{ event.statusSnapshot | statusName }}
                 </div>
               </div>
            </div>

@@ -10,8 +10,8 @@
     <div class="encomenda-info">
       <div class="encomenda-header">
         <h2 class="encomenda-title">{{ package.trackingCode }}</h2>
-        <div class="status-badge" [ngClass]="getStatusClass(package.currentStatus)">
-          {{ formatStatus(package.currentStatus) }}
+        <div class="status-badge" [ngClass]="package.currentStatus | statusClass">
+              {{ package.currentStatus | statusName }}
         </div>
       </div>
 
@@ -164,9 +164,9 @@
           <div
             *ngIf="event.statusSnapshot"
             class="timeline-status"
-            [ngClass]="getStatusClass(event.statusSnapshot)"
+            [ngClass]="event.statusSnapshot | statusClass"
           >
-            {{ formatStatus(event.statusSnapshot) }}
+            {{ event.statusSnapshot | statusName }}
           </div>
         </div>
       </div>

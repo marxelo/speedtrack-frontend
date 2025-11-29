@@ -4,11 +4,12 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms'; // <--- Import for inputs
 import { PackageService } from '../../services/package.service';
 import { Package, PackageStatus } from '../../models/speedtrack.models';
+import { StatusNamePipe, StatusClassPipe } from '../../pipes/status.pipes'; 
 
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, StatusNamePipe, StatusClassPipe],
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.css'],
 })
@@ -97,34 +98,4 @@ export class LandingPageComponent implements OnInit {
     });
   }
 
-  // Helper for Timeline Styling
-  getStatusClass(status: string): string {
-    switch (status) {
-      case 'WAITING_ASSIGNMENT':
-      case 'WAITING_WITHDRAWAL':
-        return 'status-waiting';
-      case 'WITH_COURIER':
-      case 'OUT_FOR_DELIVERY':
-        return 'status-in-transit';
-      case 'DELIVERED':
-        return 'status-delivered';
-      case 'RETURNED_WAREHOUSE':
-        return 'status-returned';
-      default:
-        return '';
-    }
-  }
-
-  formatStatus(status: string): string {
-    const map: any = {
-      WAITING_ASSIGNMENT: 'Aguardando Atribuição',
-      WAITING_WITHDRAWAL: 'Aguardando Retirada',
-      WITH_COURIER: 'Com Entregador',
-      OUT_FOR_DELIVERY: 'Saiu para Entrega',
-      DELIVERED: 'Entregue',
-      RETURNED_WAREHOUSE: 'Devolvida ao Armazém',
-      RETURN_TO_WAREHOUSE_PENDING: 'Devolução ao Armazém Pendente',
-    };
-    return map[status] || status;
-  }
 }

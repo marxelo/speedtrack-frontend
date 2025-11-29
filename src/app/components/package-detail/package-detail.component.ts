@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { PackageService } from '../../services/package.service';
 import { Package, PackageStatus, User } from '../../models/speedtrack.models';
+import { StatusNamePipe, StatusClassPipe } from '../../pipes/status.pipes'; 
 
 @Component({
   selector: 'app-package-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, StatusNamePipe, StatusClassPipe],
   templateUrl: './package-detail.component.html',
   styleUrls: ['./package-detail.component.css'],
 })
@@ -113,36 +114,4 @@ export class PackageDetailComponent implements OnInit {
     this.location.back();
   }
 
-  // ... helpers (getStatusClass, formatStatus) ...
-  getStatusClass(status: string): string {
-    switch (status) {
-      case PackageStatus.WAITING_ASSIGNMENT:
-      case PackageStatus.WAITING_WITHDRAWAL:
-        return 'status-waiting';
-      case PackageStatus.WITH_COURIER:
-      case PackageStatus.OUT_FOR_DELIVERY:
-        return 'status-in-transit';
-      case PackageStatus.DELIVERED:
-        return 'status-delivered';
-      case PackageStatus.RETURNED_WAREHOUSE:
-        return 'status-returned';
-      case PackageStatus.RETURN_TO_WAREHOUSE_PENDING:
-        return 'status-returned';
-      default:
-        return '';
-    }
-  }
-
-  formatStatus(status: string): string {
-    const map: any = {
-      WAITING_ASSIGNMENT: 'Aguardando Atribuição',
-      WAITING_WITHDRAWAL: 'Aguardando Retirada',
-      WITH_COURIER: 'Com Entregador',
-      OUT_FOR_DELIVERY: 'Saiu para Entrega',
-      DELIVERED: 'Entregue',
-      RETURNED_WAREHOUSE: 'Devolvida ao Armazém',
-      RETURN_TO_WAREHOUSE_PENDING: 'Devolução ao Armazém Pendente',
-    };
-    return map[status] || status;
-  }
 }
