@@ -4,14 +4,16 @@
         <i class="material-symbols-outlined">delivery_truck_speed</i>SpeedLog
       </a>
       <button class="btn btn-primary" routerLink="/login">
-          Área do Colaborador
+          Acesso ao Sistema
       </button>
   </header>
 
   <section class="landing-hero">
-      <h1 class="hero-title">SpeedTrack: A evolução da sua logística de entrega</h1>
-      <p class="hero-subtitle">Gerencie, rastreie e otimize todo o processo de entregas com nossa plataforma integrada.</p>
-
+      <h1 class="hero-title">Conectando encomendas aos seus destinos</h1>
+      <p class="hero-subtitle">
+        Tecnologia inteligente para acompanhar cada etapa do caminho. 
+        Segurança para quem envia e tranquilidade para quem recebe.
+      </p>
       <div class="tracking-card">
         
         <div class="tracking-inputs-column">
@@ -29,7 +31,7 @@
           <div class="form-group-landing">
             <label for="mathInput">
               <i class="material-symbols-outlined icon-tiny">lock</i> 
-              Verificação de segurança: Quanto é <strong>{{ mathChallenge }}</strong>
+             <p> Verificação de segurança: Quanto é <strong>{{ mathChallenge }}</strong></p>
             </label>
             <input type="number" 
                    id="mathInput"
@@ -40,8 +42,8 @@
           </div>
           
           <button class="tracking-button full-width" (click)="onTrack()" [disabled]="isLoading">
-            <span *ngIf="!isLoading">Rastrear Encomenda</span>
-            <span *ngIf="isLoading">Buscando...</span>
+            <span *ngIf="!isLoading">Rastrear Agora</span>
+            <span *ngIf="isLoading">Localizando...</span>
           </button>
         </div>
 
@@ -54,10 +56,10 @@
       <div class="result-container" *ngIf="trackingResult">
         <div class="result-header">
           <div class="header-texts">
-            <h3>Resultado para: {{ trackingResult.trackingCode }}</h3>
+            <h3>Status da Entrega: {{ trackingResult.trackingCode }}</h3>
             
             <p class="partner-info" *ngIf="trackingResult.partnerCode">
-              Código de rastreio no(a) <strong>{{ trackingResult.partnerName }}</strong>: {{ trackingResult.partnerCode }}
+              Código original ({{ trackingResult.partnerName }}): {{ trackingResult.partnerCode }}
             </p>
           </div>
 

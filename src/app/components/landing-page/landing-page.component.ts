@@ -123,6 +123,7 @@ export class LandingPageComponent implements OnInit {
       OUT_FOR_DELIVERY: 'Saiu para Entrega',
       DELIVERED: 'Entregue',
       RETURNED_WAREHOUSE: 'Devolvida ao Armazém',
+      RETURN_TO_WAREHOUSE_PENDING: 'Devolução ao Armazém Pendente',
     };
     return map[status] || status;
   }
