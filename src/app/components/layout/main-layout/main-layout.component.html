@@ -1,4 +1,10 @@
 <div class="app-container">
+
+  <div class="sidebar-overlay" 
+       [class.show]="isSidebarOpen" 
+       (click)="closeSidebar()">
+  </div>
+
   <div class="sidebar" [class.show]="isSidebarOpen">
     <div class="sidebar-header">
       <h2 class="sidebar-logo">
@@ -9,28 +15,28 @@
     <ul class="nav-menu">
       <!-- DASHBOARD: Admin & Operator -->
       <li class="nav-item" *ngIf="isAdmin || isOperator">
-        <a routerLink="/app/dashboard" routerLinkActive="active" class="nav-link">
+        <a routerLink="/app/dashboard" routerLinkActive="active" class="nav-link" (click)="closeSidebar()">
           <i class="material-symbols-outlined">dashboard</i> Dashboard
         </a>
       </li>
 
       <!-- REGISTER: Admin & Operator -->
       <li class="nav-item" *ngIf="isAdmin || isOperator">
-        <a routerLink="/app/register" routerLinkActive="active" class="nav-link">
+        <a routerLink="/app/register" routerLinkActive="active" class="nav-link" (click)="closeSidebar()">
           <i class="material-symbols-outlined">add_box</i> Registrar Encomenda
         </a>
       </li>
 
       <!-- CONSULT: Operator & Courier -->
-      <li class="nav-item" *ngIf="isOperator || isCourier">
-        <a routerLink="/app/consult" routerLinkActive="active" class="nav-link">
+      <li class="nav-item" *ngIf="isOperator || isCourier || isAdmin">
+        <a routerLink="/app/consult" routerLinkActive="active" class="nav-link" (click)="closeSidebar()">
           <i class="material-symbols-outlined">search</i> Consultar Encomendas
         </a>
       </li>
 
       <!-- MANAGE USERS: Admin Only -->
       <li class="nav-item" *ngIf="isAdmin">
-        <a routerLink="/app/users" routerLinkActive="active" class="nav-link">
+        <a routerLink="/app/users" routerLinkActive="active" class="nav-link" (click)="closeSidebar()">
           <i class="material-symbols-outlined">manage_accounts</i> Gerenciar Usuários
         </a>
       </li>

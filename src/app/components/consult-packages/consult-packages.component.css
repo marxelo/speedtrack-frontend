@@ -54,7 +54,9 @@
   background-color: var(--white);
   border-radius: 8px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+  /* NEW: Scroll Logic */
+  overflow: auto;
+  max-height: 600px; /* Taller window for the search results */
 }
 .table-header {
   padding: 15px 20px;
@@ -68,7 +70,12 @@ table {
   width: 100%;
   border-collapse: collapse;
 }
+
 th {
+  position: sticky;
+  top: 0;
+  z-index: 10; /* Ensures header stays on top of content */
+
   text-align: left;
   padding: 12px 20px;
   background-color: var(--bg-gray);

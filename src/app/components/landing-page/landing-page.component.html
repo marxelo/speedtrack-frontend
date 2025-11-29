@@ -1,7 +1,7 @@
 <div class="landing-container">
   <header class="landing-header">
       <a routerLink="/" class="landing-logo">
-          <i class="material-symbols-outlined">delivery_truck_speed</i>SpeedLog
+        <i class="material-symbols-outlined">delivery_truck_speed</i>SpeedLog
       </a>
       <button class="btn btn-primary" routerLink="/login">
           Área do Colaborador
@@ -12,10 +12,57 @@
       <h1 class="hero-title">SpeedTrack: A evolução da sua logística de entrega</h1>
       <p class="hero-subtitle">Gerencie, rastreie e otimize todo o processo de entregas com nossa plataforma integrada.</p>
 
-      <div class="tracking-form">
-          <input type="text" class="tracking-input" placeholder="Digite o código de rastreio">
-          <button class="tracking-button">Rastrear</button>
+      <div class="tracking-card">
+        
+        <div class="tracking-inputs">
+          <input type="text" 
+                 [(ngModel)]="trackingCode" 
+                 class="tracking-input" 
+                 placeholder="Digite o código (SpeedLog ou Parceiro)"
+                 (keyup.enter)="onTrack()">
+          
+          <div class="math-captcha">
+             <span class="math-label">{{ mathChallenge }}</span>
+             <input type="number" 
+                    [(ngModel)]="userMathInput" 
+                    class="math-input" 
+                    placeholder="?">
+          </div>
+          
+          <button class="tracking-button" (click)="onTrack()" [disabled]="isLoading">
+            <span *ngIf="!isLoading">Rastrear</span>
+            <span *ngIf="isLoading">...</span>
+          </button>
+        </div>
+
+        <div *ngIf="errorMessage" class="tracking-error">
+          <i class="material-symbols-outlined">error</i> {{ errorMessage }}
+        </div>
+
       </div>
+
+      <div class="result-container" *ngIf="trackingResult">
+        <div class="result-header">
+          <h3>Resultado para: {{ trackingResult.trackingCode }}</h3>
+          <span class="status-badge" [ngClass]="getStatusClass(trackingResult.currentStatus)">
+             {{ formatStatus(trackingResult.currentStatus) }}
+          </span>
+        </div>
+
+        <div class="history-timeline">
+           <div class="timeline-item" *ngFor="let event of trackingResult.history.slice().reverse()">
+              <div class="timeline-date">{{ event.actionDate | date:'dd/MM/yyyy HH:mm' }}</div>
+              <div class="timeline-content">
+                <strong>{{ event.actionType }}</strong>
+                <p *ngIf="event.notes">{{ event.notes }}</p>
+                <div *ngIf="event.statusSnapshot" class="timeline-status" [ngClass]="getStatusClass(event.statusSnapshot)">
+                  {{ formatStatus(event.statusSnapshot) }}
+                </div>
+              </div>
+           </div>
+        </div>
+      </div>
+
   </section>
 
   <footer class="landing-footer">

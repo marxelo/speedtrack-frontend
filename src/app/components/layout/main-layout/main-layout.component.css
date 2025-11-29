@@ -154,7 +154,8 @@ body {
   position: fixed;
   height: 100vh;
   transition: transform 0.3s ease;
-  z-index: 100;
+  z-index: 1000; /* High Z-Index to sit on top */
+  overflow-y: auto;
 }
 
 .sidebar-header {
@@ -226,6 +227,7 @@ body {
   flex: 1;
   margin-left: 250px;
   transition: margin 0.3s ease;
+  width: 100%;
 }
 
 /* Header */
@@ -238,7 +240,7 @@ body {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
-  z-index: 90;
+  z-index: 900;
 }
 
 .user-menu {
@@ -759,61 +761,6 @@ body {
   line-height: 1.6;
 }
 
-/* Responsividade */
-@media (max-width: 992px) {
-  .sidebar {
-    transform: translateX(-100%);
-  }
-
-  .sidebar.show {
-    transform: translateX(0);
-  }
-
-  .main-content {
-    margin-left: 0;
-  }
-
-  .mobile-menu-btn {
-    display: block;
-  }
-
-  .encomenda-details {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-title {
-    font-size: 32px;
-  }
-
-  .hero-subtitle {
-    font-size: 18px;
-  }
-}
-
-@media (max-width: 768px) {
-  .form-row {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .header {
-    padding: 15px;
-  }
-
-  .tracking-form {
-    flex-direction: column;
-  }
-
-  .tracking-input {
-    border-radius: 6px;
-    margin-bottom: 10px;
-  }
-
-  .tracking-button {
-    border-radius: 6px;
-    width: 100%;
-  }
-}
 
 /* Mobile Menu Button */
 .mobile-menu-btn {
@@ -824,6 +771,17 @@ body {
   color: var(--medium-gray);
   cursor: pointer;
   margin-right: 15px;
+}
+
+/* Sidebar Overlay (Backdrop for Mobile) */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 950; /* Behind sidebar (1000) but above content */
+    opacity: 0;
+    transition: opacity 0.3s;
 }
 
 /* Toast Notifications */
@@ -888,5 +846,66 @@ body {
 
   to {
     opacity: 0;
+  }
+}
+
+/* Responsividade */
+@media (max-width: 992px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.show {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .sidebar-overlay.show {
+    display: block;
+    opacity: 1;
+  }
+
+  .encomenda-details {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-title {
+    font-size: 32px;
+  }
+
+  .hero-subtitle {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .header {
+    padding: 15px;
+  }
+
+  .tracking-form {
+    flex-direction: column;
+  }
+
+  .tracking-input {
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+
+  .tracking-button {
+    border-radius: 6px;
+    width: 100%;
   }
 }

@@ -76,4 +76,9 @@ export class PackageService {
   getCouriers(): Observable<User[]> {
     return this.http.get<User[]>(`${environment.apiUrl}/users/couriers`);
   }
+
+  // Public Tracking Call
+  trackPackage(code: string): Observable<Package> {
+    return this.http.get<Package>(`${this.apiUrl}/tracking/${code}`);
+  }
 }

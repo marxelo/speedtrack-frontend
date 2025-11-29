@@ -50,6 +50,10 @@ export class MainLayoutComponent implements OnInit {
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
   }
+  // method to close menu explicitly
+  closeSidebar() {
+    this.isSidebarOpen = false;
+  }
   toggleUserMenu() {
     this.isUserMenuOpen = !this.isUserMenuOpen;
   }

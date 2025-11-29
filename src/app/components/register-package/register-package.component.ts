@@ -89,7 +89,7 @@ export class RegisterPackageComponent implements OnInit {
       this.packageService.createPackage(this.packageForm.value).subscribe({
         next: (res) => {
           alert(`Encomenda registrada com sucesso! Código: ${res.trackingCode}`);
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/app/dashboard']);
         },
         error: (err) => {
           console.error(err);
@@ -102,6 +102,6 @@ export class RegisterPackageComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/app/dashboard']);
   }
 }
