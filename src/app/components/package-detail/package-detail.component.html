@@ -18,7 +18,8 @@
       <div class="encomenda-actions">
         <button *ngIf="
             package.currentStatus === PackageStatus.WAITING_ASSIGNMENT ||
-            package.currentStatus === PackageStatus.RETURNED_WAREHOUSE
+            package.currentStatus === PackageStatus.RETURNED_WAREHOUSE ||
+            package.currentStatus === PackageStatus.DELIVERY_ISSUES 
           " class="btn btn-primary" (click)="openAssignModal()">
           <i class="material-symbols-outlined">local_shipping</i> Atribuir Entregador
         </button>
@@ -50,10 +51,21 @@
           <i class="material-symbols-outlined">assignment_return</i>Aceitar Devolução
         </button>
 
-        <button *ngIf="package.currentStatus === PackageStatus.RETURNED_WAREHOUSE" class="btn btn-destructive"
+        <button *ngIf="package.currentStatus === PackageStatus.RETURNED_WAREHOUSE
+        || package.currentStatus === PackageStatus.DELIVERY_ISSUES" class="btn btn-destructive"
           (click)="changeStatus(PackageStatus.RETURNED_SENDER)">
           <i class="material-symbols-outlined">assignment_return</i> Devolver ao Contratante
         </button>
+        <button *ngIf="
+            package.currentStatus === PackageStatus.WAITING_ASSIGNMENT ||
+            package.currentStatus === PackageStatus.WAITING_WITHDRAWAL ||
+            package.currentStatus === PackageStatus.WITH_COURIER ||
+            package.currentStatus === PackageStatus.OUT_FOR_DELIVERY ||
+            package.currentStatus === PackageStatus.RETURN_TO_WAREHOUSE_PENDING ||
+            package.currentStatus === PackageStatus.RETURNED_WAREHOUSE" class="btn btn-destructive"
+          (click)="changeStatus(PackageStatus.DELIVERY_ISSUES)">
+          <i class="material-symbols-outlined">warning</i> Registrar Ocorrência
+        </button>        
         <button class="btn btn-secondary" (click)="handleAddNote()">
           <i class="material-symbols-outlined">note_add</i> Adicionar Observação
         </button>

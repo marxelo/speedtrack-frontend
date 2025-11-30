@@ -100,7 +100,9 @@ export class PackageDetailComponent implements OnInit {
     if (newStatus === PackageStatus.RETURNED_WAREHOUSE) {
       notes = prompt('Motivo da devolução:') || 'Devolvido';
     }
-
+    if (newStatus === PackageStatus.DELIVERY_ISSUES) {
+      notes = prompt('Motivo da ocorrência:') || 'Ocorrência';
+    }
     if (confirm('Confirmar alteração de status?')) {
       this.packageService.updateStatus(this.package.id, newStatus, notes).subscribe({
         next: (updated) => {
