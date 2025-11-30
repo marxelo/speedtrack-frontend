@@ -1,0 +1,63 @@
+.not-found-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: 20px;
+}
+
+.not-found-content {
+  max-width: 500px;
+}
+
+.not-found-icon {
+  font-size: 80px;
+  color: var(--medium-gray);
+  margin-bottom: 20px;
+}
+
+.not-found-icon i {
+  font-size: 80px;
+}
+
+.not-found-title {
+  font-size: 32px;
+  margin-bottom: 15px;
+  color: var(--dark-gray);
+}
+
+.not-found-text {
+  color: var(--medium-gray);
+  margin-bottom: 30px;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+/* Reusing global button styles, but ensuring specific overrides if needed */
+.btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn i {
+  margin-right: 8px;
+  font-size: 20px;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background-color: #004a83;
+}

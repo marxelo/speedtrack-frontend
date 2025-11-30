@@ -58,4 +58,11 @@ export class AuthService {
   getUserRole(): UserRole | undefined {
     return this.currentUserSubject.value?.role;
   }
+  
+  // 2. Check if user has ANY of the required roles
+  hasAnyRole(requiredRoles: UserRole[]): boolean {
+    const user = this.currentUserSubject.value;
+    if (!user) return false;
+    return requiredRoles.includes(user.role);
+  }
 }
